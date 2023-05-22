@@ -35,9 +35,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the image
-        run: docker build --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} --build-arg APP_ID=${{ secrets.APP_ID }} --build-arg PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} -t probot-gpt-reviewer .
+        run: docker build --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} -t probot-gpt-reviewer .
       - name: Log in to Heroku
         run: heroku container:login
+      - name: Config Env Vars on Heroku
+        run: heroku config:set APP_ID=${{ secrets.APP_ID }} PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} -a probot-gpt-reviewer
       - name: Push to Heroku
         run: heroku container:push web -a probot-gpt-reviewer
       - name: Deploy to Heroku
