@@ -1,34 +1,18 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": false,
+    "module": "CommonJS",
+    "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "ES2019",
+    "target": "es2019",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./",
-    "incremental": false,
-    "moduleResolution": "node",
+    "baseUrl": "./",
+    "incremental": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "useUnknownInCatchVariables": false,
     "allowJs": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "baseUrl": "./src",
-    "paths": {
-      "~/*": [
-        "./*"
-      ]
-    }
+    "resolveJsonModule": true
   },
-  "include": [
-    "types"
-  ],
   "exclude": ["node_modules", "dist"]
 }
