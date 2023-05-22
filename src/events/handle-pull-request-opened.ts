@@ -10,13 +10,11 @@ export default async (context: Context): Promise<void> => {
         const pullRequest = context.payload.pull_request;
         const title = pullRequest.title;
         const description = pullRequest.body;
-        const prContent: string = pullRequest.body!;
         const repo = context.repo();
         const messages = [
             { role: 'system', content: 'You are a helpful AI that reviews code.' },
             { role: 'user', content: `Pull Request Title: ${title}`},
             { role: 'user', content: `Pull Request Description: ${description}`},
-            { role: 'user', content: prContent },
         ];
 
         // Get the changed files in the pull request
@@ -27,6 +25,8 @@ export default async (context: Context): Promise<void> => {
 
         for (const file of filesChanged.data) {
             // Add each file diff to the messages array
+            console.log(`File Changed: ${file.filename}\n${file.patch}`);
+            console.log(file);
             messages.push({ role: 'user', content: `File Changed: ${file.filename}\n${file.patch}` });
         }
 
