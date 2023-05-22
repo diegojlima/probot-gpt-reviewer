@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { mocked } from 'ts-jest/utils';
-import {Message, sendToGpt} from "./gptService";
+import {Message, sendToGpt} from "./gpt-service";
 
 jest.mock('axios');
 const mockedAxios = mocked(axios, true);

@@ -1,5 +1,5 @@
 import { Context } from 'probot';
-import { sendToGpt } from '../services/gptService';
+import { sendToGpt } from '../services/gpt-service';
 
 export default async (context: Context): Promise<void> => {
     // Get the Octokit SDK client

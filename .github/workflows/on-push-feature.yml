@@ -1,0 +1,41 @@
+name: On push non-main
+on:
+  push:
+    branches-ignore:
+      - main
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+
+
+  heroku-container-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - build-and-test
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      HEROKU_OPENAI_API_KEY: ${{ secrets.HEROKU_OPENAI_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the image
+        run: docker build --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} -t probot-gpt-reviewer .
+      - name: Log in to Heroku
+        run: heroku container:login
+      - name: Push to Heroku
+        run: heroku container:push web -a probot-gpt-reviewer
+      - name: Deploy to Heroku
+        run: heroku container:release web -a probot-gpt-reviewer

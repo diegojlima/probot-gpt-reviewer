@@ -1,5 +1,5 @@
 import { Probot } from 'probot';
-import {sendToGpt} from "../services/gptService";
+import {sendToGpt} from "../services/gpt-service";
 import pullRequestHandler from "./handle-pull-request-opened";
 
 jest.mock('../services/gptService');

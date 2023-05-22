@@ -1,4 +1,4 @@
-import {Message, sendToGpt} from "./gptService";
+import {Message, sendToGpt} from "./gpt-service";
 
 describe('sendToGpt', () => {
     jest.setTimeout(10000);  // Set the timeout for these tests to 10 seconds
