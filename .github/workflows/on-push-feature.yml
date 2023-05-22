@@ -7,18 +7,21 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
+      APP_ID: ${{ secrets.APP_ID }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+      WEBHOOK_PROXY_URL: ${{ secrets.WEBHOOK_PROXY_URL }}
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 18
       - name: Install dependencies
         run: npm ci
       - name: Build
         run: npm run build
-
 
   heroku-container-push:
     runs-on: ubuntu-latest
@@ -26,8 +29,12 @@ jobs:
     needs:
       - build-and-test
     env:
+      APP_ID: ${{ secrets.APP_ID }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      HEROKU_OPENAI_API_KEY: ${{ secrets.HEROKU_OPENAI_API_KEY }}
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+      WEBHOOK_PROXY_URL: ${{ secrets.WEBHOOK_PROXY_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,7 +42,10 @@ jobs:
         run: docker build --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} -t probot-gpt-reviewer .
       - name: Log in to Heroku
         run: heroku container:login
+      - name: Config Env Vars on Heroku
+        run: heroku config:set APP_ID=${{ secrets.APP_ID }} PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} WEBHOOK_SECRET=${{ secrets.WEBHOOK_SECRET }} WEBHOOK_PROXY_URL=${{ secrets.WEBHOOK_PROXY_URL }} -a probot-gpt-reviewer
       - name: Push to Heroku
         run: heroku container:push web -a probot-gpt-reviewer
       - name: Deploy to Heroku
         run: heroku container:release web -a probot-gpt-reviewer
+
