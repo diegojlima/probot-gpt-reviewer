@@ -29,8 +29,6 @@ export default async (context: Context): Promise<void> => {
 
             messages.push({ role: 'user', content: `File Changed: ${file.filename}\n${file.patch}` });
 
-            messages.push({ role: 'user', content: `Give a brief testing idea maybe with simple example if its suitable` });
-
             const gptResponse = await sendToGpt(messages);
 
             // Create a comment on the pull request
