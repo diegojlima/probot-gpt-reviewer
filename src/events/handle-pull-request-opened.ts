@@ -29,8 +29,6 @@ export default async (context: Context): Promise<void> => {
 
             messages.push({ role: 'user', content: `File Changed: ${file.filename}\n${file.patch}` });
 
-            messages.push({ role: 'user', content: 'At the end of your answer add that by replying and tagging @probot-gpt-reviewer you can give more suggestions like testing and other helpful things' })
-
             const gptResponse = await sendToGpt(messages);
 
             // Create a comment on the pull request
