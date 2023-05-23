@@ -27,7 +27,6 @@ export default async (context: Context): Promise<void> => {
             // Add each file diff to the messages array
             console.log(`File Changed: ${file.filename}`);
 
-            messages.push({ role: 'user', content: 'mention the specific line in which changes were made' });
             messages.push({ role: 'user', content: `File Changed: ${file.filename}\n${file.patch}` });
 
             const gptResponse = await sendToGpt(messages);
