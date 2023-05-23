@@ -30,6 +30,8 @@ export default async (context: Context): Promise<void> => {
             messages.push({ role: 'user', content: `File Changed: ${file.filename}\n${file.patch}` });
         }
 
+        messages.push({ role: 'user', content: `mention the specific line of code regarding change review` });
+
         const gptResponse: string = await sendToGpt(messages);
 
         // Create a comment on the pull request
