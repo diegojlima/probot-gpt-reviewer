@@ -2,7 +2,7 @@ name: On Merge Main
 on:
   push:
     branches:
-      - main
+      - main  
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
