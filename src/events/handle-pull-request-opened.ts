@@ -13,8 +13,8 @@ export default async (context: Context): Promise<void> => {
         const repo = context.repo();
         const messages = [
             { role: 'system', content: 'You are a helpful AI that reviews code.' },
-            { role: 'user', content: `Pull Request Title: ${title}`},
-            { role: 'user', content: `Pull Request Description: ${description}`},
+            { role: 'user', content: `Pull Request Title: ${title}` },
+            { role: 'user', content: `Pull Request Description: ${description}` },
         ];
 
         // Get the changed files in the pull request
@@ -25,20 +25,20 @@ export default async (context: Context): Promise<void> => {
 
         for (const file of filesChanged.data) {
             // Add each file diff to the messages array
-            console.log(`File Changed: ${file.filename}\n${file.patch}`);
-            console.log(file);
+            console.log(`File Changed: ${file.filename}`);
+
             messages.push({ role: 'user', content: `File Changed: ${file.filename}\n${file.patch}` });
+
+            const gptResponse = await sendToGpt(messages);
+
+            // Create a comment on the pull request
+            await octokit.issues.createComment({
+                ...repo,
+                issue_number: pullRequest.number,
+                body: `For file: ${file.filename}\n\n` + gptResponse
+            });
+
+            messages.pop();
         }
-
-        messages.push({ role: 'user', content: `mention the specific line of code regarding change review` });
-
-        const gptResponse: string = await sendToGpt(messages);
-
-        // Create a comment on the pull request
-        await octokit.issues.createComment({
-            ...repo,
-            issue_number: pullRequest.number,
-            body: gptResponse
-        });
     }
 }
